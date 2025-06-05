@@ -81,7 +81,7 @@ export class Knight {
           this.gameObj.play("fast")
           if (this.gameObj.checkCollision(this.player.gameObj.get("attack-area")[0])) {
             if (this.gameObj.get("knight-hitbox")[0].checkCollision(this.player.gameObj)) {
-              this.player.gameObj.hurt(10)
+              this.player.gameObj.hurt(1)
               shake(5)
             }
           }
@@ -93,7 +93,7 @@ export class Knight {
           this.gameObj.play("charged")
           if (this.gameObj.checkCollision(this.player.gameObj.get("attack-area")[0])) {
             if (this.gameObj.get("knight-hitbox")[0].checkCollision(this.player.gameObj)) {
-              this.player.gameObj.hurt(10)
+              this.player.gameObj.hurt(5)
               shake(10)
             }
           }
@@ -109,8 +109,6 @@ export class Knight {
               destroy(this.gameObj)
               this.player.killCount +=1
               this.numOfKnights -=1
-              console.log(this.numOfKnights, 'hi')
-              
             }
           })
         });

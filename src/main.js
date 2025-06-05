@@ -70,6 +70,7 @@ const scenes = {
             anchor("center"),
             pos(width()/2, width() > height() ? height()-height()/4 : height()-height()/4),
         ])
+        
 
     },
     "controls": () => {
@@ -159,9 +160,11 @@ const scenes = {
         add([
             sprite("floor", {
                 tiled: true,
-                width: width()*3,
-                height: height()*3,
+                width: width()*3.5,
+                height: height()*3.5,
             }),
+            pos(-width()/4, -height()/4)
+
         ]);
 
         add([
@@ -251,9 +254,6 @@ const scenes = {
 
             const spawnPoints = get("spawn-point")
 
-            console.log(spawnPoints[curSpawnPoint].isOffScreen())
-
-
             if (spawnPoints[curSpawnPoint].isOffScreen()) {
                 addEnemy(spawnPoints[curSpawnPoint].pos.x, spawnPoints[curSpawnPoint].pos.y)
             }
@@ -263,8 +263,6 @@ const scenes = {
             } else if (curSpawnPoint = 3) {
                 curSpawnPoint = 0
             }
-            console.log(spawner)
-
         })
         
         player.gameObj.onUpdate(() => {
@@ -282,7 +280,6 @@ const scenes = {
                     spawner.paused = true
                 }
             }
-            console.log(get("knight").length)
         })
 
     },
@@ -298,34 +295,43 @@ const scenes = {
                 height: height(),
             }),
         ]);
-        const nextBtn = (() => {
-            if (width() > height()) {
-                return addButton(width()/6, width()/2, height()/2, "play", 7, 0, width()/9)
-                } else {
-                return addButton(width()/3, width()/2, height()/2, "play", 10, 0, width()/5)
-            }
-        })()
-        nextBtn.color = rgb(0,0,0)
-        nextBtn.onClick(() => {
-            nextBtn.scale = vec2(1.2);
-            wait(0.1, () => {
-                nextBtn.scale = vec2(1);
-            })  
-            go(1)    
-        })
+
+        if (isMobile) {
+            const nextBtn = (() => {
+                if (width() > height()) {
+                    return addButton(width()/6, width()/2, height()/2, "play", 7, 0, width()/9)
+                    } else {
+                    return addButton(width()/3, width()/2, height()/2, "play", 10, 0, width()/5)
+                }
+            })()
+            nextBtn.color = rgb(0,0,0)
+            nextBtn.onClick(() => {
+                nextBtn.scale = vec2(1.2);
+                wait(0.1, () => {
+                    nextBtn.scale = vec2(1);
+                })  
+                go(1)    
+            })
+        } else {
+            onKeyPress("enter", () => {
+                go(1) 
+              })
+        }
+        
         add([
-            text(`You win`, { size: height()/15 }),
+            text(`You won!`, { size: height()/15 }),
             anchor("center"),
             pos(width()/2, width() > height() ? height()/4 : height()/4),
         ])
         add([
-            text(`Play`, { size: height()/15 }),
+            text(isMobile ? `Play again` : `Press "ENTER" to play again`, { size: height()/15 }),
             anchor("center"),
             pos(width()/2, width() > height() ? height()-height()/4 : height()-height()/4),
             "kill-count"
         ])
     },
-    "gameover": () => {
+    "gameover": (killCount) => {
+        
         add([
             rect(width()*3, height()),
             color(8,25,39)
@@ -337,31 +343,43 @@ const scenes = {
                 height: height(),
             }),
         ]);
-        const nextBtn = (() => {
-            if (width() > height()) {
-                return addButton(width()/6, width()/2, height()/2, "play", 7, 0, width()/9)
-                } else {
-                return addButton(width()/3, width()/2, height()/2, "play", 10, 0, width()/5)
-            }
-        })()
-        nextBtn.color = rgb(0,0,0)
-        nextBtn.onClick(() => {
-            nextBtn.scale = vec2(1.2);
-            wait(0.1, () => {
-                nextBtn.scale = vec2(1);
-            })  
-            go(1)    
-        })
+
+        if (isMobile) {
+            const nextBtn = (() => {
+                if (width() > height()) {
+                    return addButton(width()/6, width()/2, height()/1.9, "play", 7, 0, width()/9)
+                    } else {
+                    return addButton(width()/3, width()/2, height()/2, "play", 10, 0, width()/5)
+                }
+            })()
+            nextBtn.color = rgb(0,0,0)
+            nextBtn.onClick(() => {
+                nextBtn.scale = vec2(1.2);
+                wait(0.1, () => {
+                    nextBtn.scale = vec2(1);
+                })  
+                go(1)    
+            })
+        } else {
+            onKeyPress("enter", () => {
+                go(1) 
+              })
+        }
+       
         add([
-            text(`You lose`, { size: height()/15 }),
+            text(`You're defeated.`, { size:  width() > height() ?  height()/15 : width()/15}),
             anchor("center"),
-            pos(width()/2, width() > height() ? height()/4 : height()/4),
+            pos(width()/2, width() > height() ? height()/5 : height()/5),
         ])
         add([
-            text(`Restart`, { size: height()/15 }),
+            text(`You've killed ${killCount} enemies.`, { size: width() > height() ?  height()/15 : width()/15}),
             anchor("center"),
-            pos(width()/2, width() > height() ? height()-height()/4 : height()-height()/4),
-            "kill-count"
+            pos(width()/2, width() > height() ? height()/3.5 : height()/4),
+        ])
+        add([
+            text(isMobile ? `Play again` : `Press "ENTER" to play again`, { size:  width() > height() ?  height()/15 : width()/15 }),
+            anchor("center"),
+            pos(width()/2, width() > height() ? height()-height()/4.5 : height()-height()/4),
         ])
     }
 }
